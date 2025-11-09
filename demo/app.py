@@ -369,7 +369,7 @@ elif page == "Credentials":
                     custom_json = st.text_area("Custom JSON", value='{"custom": "value"}')
                     try:
                         subject = json.loads(custom_json)
-                    except:
+                    except Exception:
                         subject = {"custom": "value"}
                 
                 if st.button("Create Credential"):
@@ -440,6 +440,8 @@ elif page == "Credentials":
                             - ✅ Presentation cannot be linked to other aliases
                             - ✅ Multiple presentations are unlinkable
                             """)
+                        except Exception as e:
+                            st.error(f"Error presenting credential: {e}")
 
 elif page == "Manage Aliases":
     st.header("Manage Aliases")
