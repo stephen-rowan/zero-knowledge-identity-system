@@ -5,6 +5,16 @@
 **Status**: Draft  
 **Input**: User description: "A zero-knowledge identity system in Python can be built around per-alias cryptographic key pairs derived either independently or from a master seed using a one-way pseudorandom function (e.g., HMAC-SHA256), ensuring that each alias's public key appears random and unlinkable to others. Users prove ownership of an alias through non-interactive zero-knowledge proofs such as Schnorr (Fiat–Shamir), which confirm possession of the private key without revealing it or any relationship to other aliases. This architecture allows a single user to maintain multiple autonomous identities that can authenticate or present verifiable credentials anonymously, while resisting cross-alias linkage both cryptographically and operationally when combined with good metadata-hygiene practices."
 
+## Clarifications
+
+### Session 2024-12-19
+
+- Q: What happens to aliases after creation? Can they be revoked, deleted, or do they persist indefinitely? → A: Aliases can be revoked/deleted by the user; revocation prevents future use but past proofs remain valid
+- Q: What are the constraints on alias identifiers? Must they be unique globally, per-user, or per-seed? What format/validation rules apply? → A: Alias identifiers must be unique per master seed (if seed-derived) or per user (if independent); user-chosen string format with reasonable length limits
+- Q: Does the system store keys/seeds, or only generate them? What recovery mechanisms are provided if a user loses their master seed? → A: System generates keys but does not store them; provides seed backup/export functionality and warnings about seed loss
+- Q: What are the system-wide scalability targets? How many total users, total aliases, or concurrent operations should the system support? → A: System supports 100,000+ total users with 1 billion+ total aliases; handles 10,000+ concurrent operations
+- Q: Which verifiable credential format standard should the system support? → A: W3C Verifiable Credentials Data Model v1.1 or later
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 - Create and Manage Alias Identities (Priority: P1)
@@ -75,13 +85,16 @@ A user needs to present verifiable credentials (claims about attributes or quali
 
 ### Edge Cases
 
-- What happens when a user loses their master seed? (System should support recovery mechanisms or warn about seed loss)
+- What happens when a user loses their master seed? (System provides seed backup/export functionality and warnings, but cannot recover lost seeds; users must maintain their own backups)
 - What happens when a user attempts to derive the same alias twice from a master seed? (System should produce the same key pair deterministically)
 - How does the system handle invalid or malformed zero-knowledge proofs? (System should reject invalid proofs with appropriate error handling)
 - What happens when a user attempts to use an alias's private key that doesn't match the public key? (Verification should fail)
-- How does the system handle very long alias identifiers or challenge messages? (System should enforce reasonable size limits)
+- How does the system handle very long alias identifiers or challenge messages? (System should enforce reasonable size limits; alias identifiers are user-chosen strings with length constraints)
+- What happens when a user attempts to create an alias with a duplicate identifier? (System should reject duplicate identifiers within the same scope: per-seed for seed-derived aliases, per-user for independent aliases)
 - What happens when multiple users independently create aliases that happen to have the same public key? (Extremely unlikely but system should handle gracefully)
 - How does the system ensure metadata hygiene to prevent operational linkage? (System should provide guidance and tools for metadata management)
+- What happens when a user revokes or deletes an alias? (System should prevent future authentication and proof generation for that alias, but past proofs remain cryptographically valid)
+- What happens when a user attempts to use a revoked alias? (System should reject authentication attempts and proof generation for revoked aliases)
 
 ## Requirements *(mandatory)*
 
@@ -102,18 +115,24 @@ A user needs to present verifiable credentials (claims about attributes or quali
 - **FR-013**: System MUST validate that zero-knowledge proofs are correctly formed before acceptance
 - **FR-014**: System MUST reject invalid or malformed zero-knowledge proofs with appropriate error handling
 - **FR-015**: System MUST support metadata hygiene practices to prevent operational linkage between aliases
+- **FR-016**: System MUST allow users to revoke or delete aliases, preventing future use while preserving validity of past proofs and credentials
+- **FR-017**: System MUST enforce alias identifier uniqueness per master seed (for seed-derived aliases) or per user (for independent aliases)
+- **FR-018**: System MUST accept user-chosen string format for alias identifiers with reasonable length limits
+- **FR-019**: System MUST NOT store master seeds or private keys; users are responsible for secure storage
+- **FR-020**: System MUST provide seed backup/export functionality to enable users to securely backup their master seeds
+- **FR-021**: System MUST warn users about the consequences of seed loss and provide guidance on secure storage practices
 
 ### Key Entities *(include if feature involves data)*
 
 - **Master Seed**: A secret value used to deterministically derive multiple alias key pairs. Must be kept secure and never exposed. Used with alias identifiers to generate key pairs via HMAC-SHA256.
 
-- **Alias**: An autonomous identity with its own cryptographic key pair. Contains an alias identifier (user-chosen or system-generated) and a public/private key pair. Public keys must appear random and unlinkable to other aliases.
+- **Alias**: An autonomous identity with its own cryptographic key pair. Contains an alias identifier (user-chosen string, unique per master seed for seed-derived aliases or per user for independent aliases) and a public/private key pair. Public keys must appear random and unlinkable to other aliases. Can be revoked or deleted by the user, which prevents future use but does not invalidate past proofs or credentials.
 
 - **Key Pair**: A cryptographic public/private key pair associated with an alias. Private key is used to generate zero-knowledge proofs. Public key is used for verification and identification.
 
 - **Zero-Knowledge Proof**: A non-interactive proof (Schnorr signature with Fiat-Shamir) that demonstrates possession of a private key without revealing it. Includes the proof data and any necessary metadata for verification.
 
-- **Verifiable Credential**: A credential or claim associated with an alias that can be presented with a zero-knowledge proof to demonstrate attributes or qualifications anonymously.
+- **Verifiable Credential**: A credential or claim associated with an alias that can be presented with a zero-knowledge proof to demonstrate attributes or qualifications anonymously. Follows W3C Verifiable Credentials Data Model v1.1 or later standard.
 
 - **Challenge Message**: A message or nonce provided by a verifier that must be included in the zero-knowledge proof to prevent replay attacks and ensure proof freshness.
 
@@ -125,6 +144,9 @@ A user needs to present verifiable credentials (claims about attributes or quali
 - **SC-002**: Users can generate a zero-knowledge proof for authentication in under 500 milliseconds
 - **SC-003**: Verifiers can verify a zero-knowledge proof in under 200 milliseconds
 - **SC-004**: System supports creation and management of at least 10,000 aliases per user without performance degradation
+- **SC-011**: System supports 100,000+ total users simultaneously
+- **SC-012**: System supports 1 billion+ total aliases across all users
+- **SC-013**: System handles 10,000+ concurrent operations (alias creation, proof generation, verification) without degradation
 - **SC-005**: Zero-knowledge proofs successfully validate 100% of the time when the user possesses the correct private key
 - **SC-006**: Zero-knowledge proofs are rejected 100% of the time when the user does not possess the correct private key
 - **SC-007**: Cryptographic analysis confirms that public keys from aliases derived from the same master seed are computationally unlinkable (no detectable relationship)
@@ -134,15 +156,15 @@ A user needs to present verifiable credentials (claims about attributes or quali
 
 ## Assumptions
 
-- Users will securely store their master seeds and private keys (system provides the cryptographic tools but not the storage mechanism)
+- Users will securely store their master seeds and private keys (system generates keys but does not store them; provides backup/export tools and warnings, but users are responsible for secure storage)
 - Verifiers will provide appropriate challenge messages (nonces) to prevent replay attacks
 - Users understand the importance of metadata hygiene and will follow best practices (system provides guidance and tools)
 - The system operates in an environment where standard cryptographic libraries are available
-- Verifiable credentials follow standard formats and can be associated with alias public keys
+- Verifiable credentials follow W3C Verifiable Credentials Data Model v1.1 or later standard and can be associated with alias public keys
 - Services implementing authentication will properly verify zero-knowledge proofs before granting access
 
 ## Dependencies
 
 - Cryptographic libraries supporting HMAC-SHA256, Schnorr signatures, and Fiat-Shamir transformation
 - Secure random number generation for independent alias creation
-- Standard verifiable credential formats (specific format to be determined based on integration requirements)
+- W3C Verifiable Credentials Data Model v1.1 or later for credential format and interoperability
