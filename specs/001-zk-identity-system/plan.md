@@ -9,6 +9,8 @@
 
 A zero-knowledge identity system enabling users to create and manage multiple cryptographically unlinkable alias identities. Each alias has its own key pair (derived independently or from a master seed via HMAC-SHA256). Users prove alias ownership through Schnorr signatures (Fiat-Shamir) without revealing private keys or relationships between aliases. Supports anonymous authentication and verifiable credential presentation following W3C Verifiable Credentials Data Model v1.1+.
 
+**Note**: The project includes a Streamlit simulation application (`demo/`) that provides an interactive demonstration of the zero-knowledge identity system using dummy cryptographic functions for educational purposes. The simulation is already built and integrated into the project structure.
+
 ## Technical Context
 
 <!--
@@ -19,6 +21,7 @@ A zero-knowledge identity system enabling users to create and manage multiple cr
 
 **Language/Version**: Python 3.11+ (specified in user input)  
 **Primary Dependencies**: `cryptography` (PyCA) for HMAC-SHA256, `pynacl` for Ed25519 Schnorr signatures, `pyld` for W3C VC JSON-LD processing, `click` for CLI interface  
+**Simulation Dependencies**: `streamlit` for the interactive demo application (separate from production library)  
 **Storage**: File-based JSON storage (user-controlled) for library/CLI; Optional SQLite/PostgreSQL for service deployments. System does NOT store keys/seeds (user responsibility per FR-019).  
 **Testing**: `pytest` with `hypothesis` for property-based testing  
 **Target Platform**: Python 3.11+ (Linux/macOS/Windows), primary use as library with CLI interface  
@@ -92,9 +95,14 @@ tests/
 
 docs/
 └── api/                      # API documentation (generated)
+
+demo/                         # Streamlit simulation application (educational/demo only)
+├── app.py                    # Main Streamlit application
+├── requirements.txt          # Simulation-specific dependencies (streamlit)
+└── README.md                # Simulation usage instructions
 ```
 
-**Structure Decision**: Single Python library project with CLI interface. The `zkidentity` package contains core functionality, while `cli` provides command-line access. This structure supports both library usage (import) and CLI usage, meeting the requirement for a library that can be used by services or directly by users.
+**Structure Decision**: Single Python library project with CLI interface and integrated simulation. The `zkidentity` package contains core functionality, while `cli` provides command-line access. The `demo/` directory contains a Streamlit simulation application that demonstrates system concepts using dummy cryptographic functions. This structure supports both library usage (import) and CLI usage, with an educational simulation component that is clearly separated from production code.
 
 ## Complexity Tracking
 

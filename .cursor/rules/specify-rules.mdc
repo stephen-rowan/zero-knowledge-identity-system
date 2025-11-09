@@ -3,6 +3,7 @@
 Auto-generated from all feature plans. Last updated: 2025-11-09
 
 ## Active Technologies
+- File-based JSON storage (user-controlled) for library/CLI; Optional SQLite/PostgreSQL for service deployments. System does NOT store keys/seeds (user responsibility per FR-019). (001-zk-identity-system)
 
 - Python 3.11+ (specified in user input) + `cryptography` (PyCA) for HMAC-SHA256, `pynacl` for Ed25519 Schnorr signatures, `pyld` for W3C VC JSON-LD processing, `click` for CLI interface (001-zk-identity-system)
 
@@ -23,6 +24,7 @@ cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLO
 Python 3.11+ (specified in user input): Follow standard conventions
 
 ## Recent Changes
+- 001-zk-identity-system: Added Python 3.11+ (specified in user input) + `cryptography` (PyCA) for HMAC-SHA256, `pynacl` for Ed25519 Schnorr signatures, `pyld` for W3C VC JSON-LD processing, `click` for CLI interface
 
 - 001-zk-identity-system: Added Python 3.11+ (specified in user input) + `cryptography` (PyCA) for HMAC-SHA256, `pynacl` for Ed25519 Schnorr signatures, `pyld` for W3C VC JSON-LD processing, `click` for CLI interface
 
