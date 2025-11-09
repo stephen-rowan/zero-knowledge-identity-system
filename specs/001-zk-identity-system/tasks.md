@@ -121,13 +121,13 @@
 
 ### Implementation for User Story 3
 
-- [ ] T052 [US3] Create authentication flow documentation in docs/authentication.md
-- [ ] T053 [US3] Implement authenticate function in zkidentity/alias.py that combines alias public key presentation with proof generation
-- [ ] T054 [US3] Add service challenge generation helper in zkidentity/proof.py for verifiers
-- [ ] T055 [US3] Create authentication example/helper functions in zkidentity/alias.py for service integration
-- [ ] T056 [US3] Add CLI command for authentication demonstration in cli/commands/alias.py
-- [ ] T057 [US3] Ensure authentication sessions are unlinkable (no cross-session linkage) in authentication flow
-- [ ] T058 [US3] Add metadata hygiene guidance for authentication in documentation
+- [X] T052 [US3] Create authentication flow documentation in docs/authentication.md
+- [X] T053 [US3] Implement authenticate function in zkidentity/alias.py that combines alias public key presentation with proof generation
+- [X] T054 [US3] Add service challenge generation helper in zkidentity/proof.py for verifiers
+- [X] T055 [US3] Create authentication example/helper functions in zkidentity/alias.py for service integration
+- [X] T056 [US3] Add CLI command for authentication demonstration in cli/commands/alias.py
+- [X] T057 [US3] Ensure authentication sessions are unlinkable (no cross-session linkage) in authentication flow
+- [X] T058 [US3] Add metadata hygiene guidance for authentication in documentation
 
 **Checkpoint**: At this point, User Stories 1, 2, AND 3 should all work independently. Users can create aliases, generate proofs, and authenticate to services.
 

@@ -7,7 +7,7 @@ without revealing private keys or relationships between aliases.
 
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, TYPE_CHECKING
 
 from zkidentity.exceptions import ProofError, AliasError
 from zkidentity.crypto import (
@@ -16,7 +16,9 @@ from zkidentity.crypto import (
     validate_challenge,
     generate_secure_random_bytes,
 )
-from zkidentity.alias import Alias
+
+if TYPE_CHECKING:
+    from zkidentity.alias import Alias
 
 
 @dataclass
@@ -75,7 +77,7 @@ class ZeroKnowledgeProof:
             return False
 
 
-def generate_proof(alias: Alias, challenge: bytes) -> ZeroKnowledgeProof:
+def generate_proof(alias: "Alias", challenge: bytes) -> ZeroKnowledgeProof:
     """
     Generate a zero-knowledge proof (Schnorr signature) for alias ownership.
     
@@ -244,4 +246,45 @@ def generate_challenge() -> bytes:
         32-byte random challenge
     """
     return generate_secure_random_bytes(32)
+
+
+def generate_service_challenge(service_id: Optional[str] = None, session_id: Optional[str] = None) -> bytes:
+    """
+    Generate a service challenge for authentication flows.
+    
+    This helper function creates challenges suitable for service authentication.
+    It includes optional service and session identifiers to prevent replay attacks
+    and ensure challenge uniqueness.
+    
+    Args:
+        service_id: Optional service identifier (e.g., "api.example.com")
+        session_id: Optional session identifier (e.g., UUID)
+    
+    Returns:
+        32-byte challenge suitable for authentication
+    
+    Requirements: FR-008, User Story 3
+    
+    Example:
+        >>> challenge = generate_service_challenge("api.example.com", "session-123")
+        >>> proof = generate_proof(alias, challenge)
+    """
+    # Generate base random challenge
+    base_challenge = generate_secure_random_bytes(32)
+    
+    # If service_id or session_id provided, incorporate them into challenge
+    # This helps prevent cross-service or cross-session replay attacks
+    if service_id or session_id:
+        import hashlib
+        challenge_data = base_challenge
+        if service_id:
+            challenge_data += service_id.encode('utf-8')
+        if session_id:
+            challenge_data += session_id.encode('utf-8')
+        # Hash to ensure consistent 32-byte output
+        challenge = hashlib.sha256(challenge_data).digest()
+    else:
+        challenge = base_challenge
+    
+    return challenge
 

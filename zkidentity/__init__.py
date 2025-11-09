@@ -25,6 +25,9 @@ from zkidentity.alias import (
     revoke_alias,
     get_alias,
     list_aliases,
+    authenticate,
+    create_authentication_request,
+    prepare_authentication_response,
     Alias,
 )
 
@@ -42,6 +45,7 @@ from zkidentity.proof import (
     verify_proof,
     ZeroKnowledgeProof,
     generate_challenge,
+    generate_service_challenge,
 )
 
 __all__ = [
@@ -68,5 +72,10 @@ __all__ = [
     "verify_proof",
     "ZeroKnowledgeProof",
     "generate_challenge",
+    "generate_service_challenge",
+    # Authentication functions
+    "authenticate",
+    "create_authentication_request",
+    "prepare_authentication_response",
 ]
 

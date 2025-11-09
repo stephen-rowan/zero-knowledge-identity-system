@@ -19,6 +19,7 @@ from zkidentity.crypto import (
 )
 from zkidentity.storage import get_default_storage, AliasStorage
 from zkidentity.seed import MasterSeed
+from zkidentity.proof import generate_proof, ZeroKnowledgeProof
 
 
 @dataclass
@@ -286,4 +287,103 @@ def load_alias_from_storage(alias_id: str, master_seed: Optional[MasterSeed] = N
     )
     
     return alias
+
+
+def authenticate(alias: Alias, challenge: bytes) -> ZeroKnowledgeProof:
+    """
+    Authenticate using an alias identity with a zero-knowledge proof.
+    
+    This function combines alias public key presentation with proof generation
+    to enable authentication flows. The user presents their public key to a
+    service, receives a challenge, and generates a proof to authenticate.
+    
+    Args:
+        alias: The alias to authenticate with (must have private key available)
+        challenge: Challenge message/nonce from the service
+    
+    Returns:
+        ZeroKnowledgeProof object containing the proof
+    
+    Raises:
+        AliasError: If alias is revoked, invalid, or private key is not available
+        ValueError: If challenge is invalid
+    
+    Requirements: FR-008, User Story 3
+    
+    Example:
+        >>> alias = get_alias("my-identity")
+        >>> challenge = service_challenge  # From service
+        >>> proof = authenticate(alias, challenge)
+        >>> # Send proof to service for verification
+    """
+    # Check alias has private key available
+    if not alias.private_key:
+        raise AliasError(
+            f"Alias '{alias.alias_id}' private key is not available. "
+            "For independent aliases, create the alias in this session to authenticate. "
+            "For seed-derived aliases, use the master seed to re-derive the alias."
+        )
+    
+    # Generate proof using the alias and challenge
+    proof = generate_proof(alias, challenge)
+    
+    return proof
+
+
+def create_authentication_request(alias: Alias) -> dict:
+    """
+    Create an authentication request with alias public key.
+    
+    This helper function prepares the initial authentication request
+    that can be sent to a service. The service will respond
+    with a challenge that can be used with authenticate().
+    
+    Args:
+        alias: The alias to authenticate with
+    
+    Returns:
+        Dictionary containing authentication request data
+    
+    Requirements: FR-008, User Story 3
+    
+    Example:
+        >>> alias = get_alias("my-identity")
+        >>> request = create_authentication_request(alias)
+        >>> # Send request to service
+        >>> # Service responds with challenge
+        >>> proof = authenticate(alias, challenge)
+    """
+    return {
+        "public_key": alias.public_key.hex(),
+        "alias_id": alias.alias_id,
+        "created_at": datetime.now().isoformat()
+    }
+
+
+def prepare_authentication_response(proof: ZeroKnowledgeProof) -> dict:
+    """
+    Prepare authentication response with proof for service.
+    
+    This helper function formats the proof for transmission to a service.
+    The service can then verify the proof using verify_proof().
+    
+    Args:
+        proof: The ZeroKnowledgeProof from authenticate()
+    
+    Returns:
+        Dictionary containing proof data for service
+    
+    Requirements: FR-008, User Story 3
+    
+    Example:
+        >>> proof = authenticate(alias, challenge)
+        >>> response = prepare_authentication_response(proof)
+        >>> # Send response to service
+    """
+    return {
+        "proof_bytes": proof.proof_bytes.hex(),
+        "public_key": proof.public_key.hex(),
+        "challenge": proof.challenge.hex(),
+        "created_at": proof.created_at
+    }
 
