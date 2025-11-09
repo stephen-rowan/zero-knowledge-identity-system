@@ -22,16 +22,16 @@
 
 **Purpose**: Project initialization and basic structure
 
-- [ ] T001 Create project directory structure (zkidentity/, cli/, tests/, docs/) per plan.md
-- [ ] T002 Initialize Python package with setup.py or pyproject.toml in repository root
-- [ ] T003 [P] Create zkidentity/__init__.py with package metadata
-- [ ] T004 [P] Create cli/__init__.py for CLI package
-- [ ] T005 [P] Create requirements.txt with production dependencies (cryptography, pynacl, pyld, click)
-- [ ] T006 [P] Create requirements-dev.txt with development dependencies (pytest, hypothesis)
-- [ ] T007 [P] Configure pytest in pytest.ini or pyproject.toml
-- [ ] T008 [P] Create .gitignore with Python patterns (__pycache__/, *.pyc, .venv/, dist/, etc.)
-- [ ] T009 [P] Create README.md with project overview and installation instructions
-- [ ] T010 Create zkidentity/exceptions.py with base exception classes (ZKIdentityError, AliasError, ProofError, CredentialError)
+- [X] T001 Create project directory structure (zkidentity/, cli/, tests/, docs/) per plan.md
+- [X] T002 Initialize Python package with setup.py or pyproject.toml in repository root
+- [X] T003 [P] Create zkidentity/__init__.py with package metadata
+- [X] T004 [P] Create cli/__init__.py for CLI package
+- [X] T005 [P] Create requirements.txt with production dependencies (cryptography, pynacl, pyld, click)
+- [X] T006 [P] Create requirements-dev.txt with development dependencies (pytest, hypothesis)
+- [X] T007 [P] Configure pytest in pytest.ini or pyproject.toml
+- [X] T008 [P] Create .gitignore with Python patterns (__pycache__/, *.pyc, .venv/, dist/, etc.)
+- [X] T009 [P] Create README.md with project overview and installation instructions
+- [X] T010 Create zkidentity/exceptions.py with base exception classes (ZKIdentityError, AliasError, ProofError, CredentialError)
 
 ---
 
@@ -41,16 +41,16 @@
 
 **⚠️ CRITICAL**: No user story work can begin until this phase is complete
 
-- [ ] T011 Create zkidentity/crypto.py with cryptographic primitives module structure
-- [ ] T012 [P] Implement HMAC-SHA256 key derivation function in zkidentity/crypto.py using cryptography library
-- [ ] T013 [P] Implement Ed25519 key pair generation in zkidentity/crypto.py using pynacl library
-- [ ] T014 [P] Implement Fiat-Shamir transformation using HMAC-SHA256 in zkidentity/crypto.py
-- [ ] T015 [P] Implement Schnorr signature generation in zkidentity/crypto.py using pynacl
-- [ ] T016 [P] Implement Schnorr signature verification in zkidentity/crypto.py using pynacl
-- [ ] T017 Create secure random number generation utilities in zkidentity/crypto.py using secrets module
-- [ ] T018 Create zkidentity/storage.py with file-based JSON storage abstraction
-- [ ] T019 Implement storage interface for alias metadata (public keys, revocation status) in zkidentity/storage.py
-- [ ] T020 Add input validation utilities for alias identifiers and challenge messages in zkidentity/crypto.py
+- [X] T011 Create zkidentity/crypto.py with cryptographic primitives module structure
+- [X] T012 [P] Implement HMAC-SHA256 key derivation function in zkidentity/crypto.py using cryptography library
+- [X] T013 [P] Implement Ed25519 key pair generation in zkidentity/crypto.py using pynacl library
+- [X] T014 [P] Implement Fiat-Shamir transformation using HMAC-SHA256 in zkidentity/crypto.py
+- [X] T015 [P] Implement Schnorr signature generation in zkidentity/crypto.py using pynacl
+- [X] T016 [P] Implement Schnorr signature verification in zkidentity/crypto.py using pynacl
+- [X] T017 Create secure random number generation utilities in zkidentity/crypto.py using secrets module
+- [X] T018 Create zkidentity/storage.py with file-based JSON storage abstraction
+- [X] T019 Implement storage interface for alias metadata (public keys, revocation status) in zkidentity/storage.py
+- [X] T020 Add input validation utilities for alias identifiers and challenge messages in zkidentity/crypto.py
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -64,26 +64,26 @@
 
 ### Implementation for User Story 1
 
-- [ ] T021 [P] [US1] Create MasterSeed class in zkidentity/seed.py with seed_bytes attribute and derive_key_pair method
-- [ ] T022 [P] [US1] Create KeyPair dataclass in zkidentity/crypto.py with public_key, private_key, sign, and verify methods
-- [ ] T023 [P] [US1] Create Alias dataclass in zkidentity/alias.py with alias_id, public_key, private_key, is_revoked, created_at, revoked_at, master_seed_id attributes
-- [ ] T024 [US1] Implement create_independent_alias function in zkidentity/alias.py that generates random key pair (FR-001, FR-004)
-- [ ] T025 [US1] Implement derive_alias_from_seed function in zkidentity/alias.py using HMAC-SHA256 key derivation (FR-002, FR-003, FR-012)
-- [ ] T026 [US1] Add alias identifier validation (length limits, uniqueness checks) in zkidentity/alias.py (FR-017, FR-018)
-- [ ] T027 [US1] Implement revoke_alias function in zkidentity/alias.py to mark aliases as revoked (FR-016)
-- [ ] T028 [US1] Implement list_aliases and get_alias functions in zkidentity/alias.py for alias management
-- [ ] T029 [US1] Add storage integration for alias metadata (save/load aliases) in zkidentity/storage.py
-- [ ] T030 [US1] Implement generate_master_seed function in zkidentity/seed.py for creating new master seeds
-- [ ] T031 [US1] Implement export_seed_backup and import_seed_backup functions in zkidentity/seed.py (FR-020)
-- [ ] T032 [US1] Add seed loss warnings and secure storage guidance in zkidentity/seed.py (FR-021)
-- [ ] T033 [US1] Create CLI command for alias creation in cli/commands/alias.py (create independent alias)
-- [ ] T034 [US1] Create CLI command for seed-derived alias creation in cli/commands/alias.py
-- [ ] T035 [US1] Create CLI command for alias listing in cli/commands/alias.py
-- [ ] T036 [US1] Create CLI command for alias revocation in cli/commands/alias.py
-- [ ] T037 [US1] Create CLI command for seed generation in cli/commands/seed.py
-- [ ] T038 [US1] Create CLI command for seed backup/restore in cli/commands/seed.py
-- [ ] T039 [US1] Add error handling for duplicate alias identifiers in zkidentity/alias.py
-- [ ] T040 [US1] Ensure private keys and master seeds are never exposed in any operation (FR-011, SC-010)
+- [X] T021 [P] [US1] Create MasterSeed class in zkidentity/seed.py with seed_bytes attribute and derive_key_pair method
+- [X] T022 [P] [US1] Create KeyPair dataclass in zkidentity/crypto.py with public_key, private_key, sign, and verify methods
+- [X] T023 [P] [US1] Create Alias dataclass in zkidentity/alias.py with alias_id, public_key, private_key, is_revoked, created_at, revoked_at, master_seed_id attributes
+- [X] T024 [US1] Implement create_independent_alias function in zkidentity/alias.py that generates random key pair (FR-001, FR-004)
+- [X] T025 [US1] Implement derive_alias_from_seed function in zkidentity/alias.py using HMAC-SHA256 key derivation (FR-002, FR-003, FR-012)
+- [X] T026 [US1] Add alias identifier validation (length limits, uniqueness checks) in zkidentity/alias.py (FR-017, FR-018)
+- [X] T027 [US1] Implement revoke_alias function in zkidentity/alias.py to mark aliases as revoked (FR-016)
+- [X] T028 [US1] Implement list_aliases and get_alias functions in zkidentity/alias.py for alias management
+- [X] T029 [US1] Add storage integration for alias metadata (save/load aliases) in zkidentity/storage.py
+- [X] T030 [US1] Implement generate_master_seed function in zkidentity/seed.py for creating new master seeds
+- [X] T031 [US1] Implement export_seed_backup and import_seed_backup functions in zkidentity/seed.py (FR-020)
+- [X] T032 [US1] Add seed loss warnings and secure storage guidance in zkidentity/seed.py (FR-021)
+- [X] T033 [US1] Create CLI command for alias creation in cli/commands/alias.py (create independent alias)
+- [X] T034 [US1] Create CLI command for seed-derived alias creation in cli/commands/alias.py
+- [X] T035 [US1] Create CLI command for alias listing in cli/commands/alias.py
+- [X] T036 [US1] Create CLI command for alias revocation in cli/commands/alias.py
+- [X] T037 [US1] Create CLI command for seed generation in cli/commands/seed.py
+- [X] T038 [US1] Create CLI command for seed backup/restore in cli/commands/seed.py
+- [X] T039 [US1] Add error handling for duplicate alias identifiers in zkidentity/alias.py
+- [X] T040 [US1] Ensure private keys and master seeds are never exposed in any operation (FR-011, SC-010)
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently. Users can create aliases (independent and seed-derived), manage them, and verify cryptographic unlinkability.
 

@@ -1,4 +1,4 @@
-# Feature Specification: Zero-Knowledge Identity System
+y# Feature Specification: Zero-Knowledge Identity System
 
 **Feature Branch**: `001-zk-identity-system`  
 **Created**: 2024-12-19  
