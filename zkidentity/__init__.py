@@ -36,6 +36,14 @@ from zkidentity.seed import (
     MasterSeed,
 )
 
+# Proof functions
+from zkidentity.proof import (
+    generate_proof,
+    verify_proof,
+    ZeroKnowledgeProof,
+    generate_challenge,
+)
+
 __all__ = [
     # Exceptions
     "ZKIdentityError",
@@ -55,5 +63,10 @@ __all__ = [
     "export_seed_backup",
     "import_seed_backup",
     "MasterSeed",
+    # Proof functions
+    "generate_proof",
+    "verify_proof",
+    "ZeroKnowledgeProof",
+    "generate_challenge",
 ]
 

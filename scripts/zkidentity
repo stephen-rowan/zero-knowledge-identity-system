@@ -1,0 +1,19 @@
+#!/usr/bin/env python3
+"""
+CLI wrapper script that ensures proper module resolution.
+This script can be used as an alternative to the setuptools entry point.
+"""
+
+import sys
+from pathlib import Path
+
+# Add project root to path
+script_dir = Path(__file__).parent.parent
+if str(script_dir.resolve()) not in [str(Path(p).resolve()) for p in sys.path]:
+    sys.path.insert(0, str(script_dir.resolve()))
+
+from cli.main import main
+
+if __name__ == '__main__':
+    sys.exit(main())
+

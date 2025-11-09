@@ -207,16 +207,38 @@ def get_alias(alias_id: str) -> Optional[Alias]:
 
 def list_aliases() -> List[Alias]:
     """
-    List all aliases in memory registry.
+    List all aliases from storage.
     
     Returns:
-        List of Alias objects
+        List of Alias objects (without private keys for independent aliases)
     
     Note:
-        Only returns aliases currently in memory. For persistent aliases,
-        use storage.list_aliases() and re-derive from seed if needed.
+        Returns aliases from persistent storage. Private keys are not available
+        for independent aliases unless they were created in the current session.
+        For seed-derived aliases, use load_alias_from_storage() with master_seed.
     """
-    return list(_alias_registry.values())
+    # Load all aliases from storage
+    stored_aliases = _storage.list_aliases()
+    result = []
+    
+    for stored in stored_aliases:
+        # Check if we have it in memory (with private key)
+        if stored['alias_id'] in _alias_registry:
+            result.append(_alias_registry[stored['alias_id']])
+        else:
+            # Create alias from storage (without private key)
+            alias = Alias(
+                alias_id=stored['alias_id'],
+                public_key=bytes.fromhex(stored['public_key']),
+                private_key=b'',  # Not available for independent aliases
+                is_revoked=stored.get('is_revoked', False),
+                created_at=stored.get('created_at', datetime.now().isoformat()),
+                revoked_at=stored.get('revoked_at'),
+                master_seed_id=stored.get('master_seed_id')
+            )
+            result.append(alias)
+    
+    return result
 
 
 def load_alias_from_storage(alias_id: str, master_seed: Optional[MasterSeed] = None) -> Optional[Alias]:

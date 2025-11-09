@@ -97,17 +97,17 @@
 
 ### Implementation for User Story 2
 
-- [ ] T041 [P] [US2] Create ZeroKnowledgeProof dataclass in zkidentity/proof.py with proof_bytes, challenge, public_key, created_at attributes
-- [ ] T042 [US2] Implement generate_proof function in zkidentity/proof.py using Schnorr signatures with Fiat-Shamir (FR-005, FR-007)
-- [ ] T043 [US2] Implement verify_proof function in zkidentity/proof.py to validate proofs against public keys and challenges (FR-006, FR-013, FR-014)
-- [ ] T044 [US2] Add proof format validation in zkidentity/proof.py before acceptance (FR-013)
-- [ ] T045 [US2] Add error handling for invalid/malformed proofs in zkidentity/proof.py (FR-014)
-- [ ] T046 [US2] Ensure proofs for different aliases are cryptographically unlinkable in zkidentity/proof.py (FR-007)
-- [ ] T047 [US2] Add check to prevent proof generation for revoked aliases in zkidentity/proof.py
-- [ ] T048 [US2] Create CLI command for proof generation in cli/commands/proof.py
-- [ ] T049 [US2] Create CLI command for proof verification in cli/commands/proof.py
-- [ ] T050 [US2] Add challenge message validation (non-empty, reasonable size) in zkidentity/proof.py
-- [ ] T051 [US2] Ensure private keys are never exposed during proof generation (FR-011)
+- [X] T041 [P] [US2] Create ZeroKnowledgeProof dataclass in zkidentity/proof.py with proof_bytes, challenge, public_key, created_at attributes
+- [X] T042 [US2] Implement generate_proof function in zkidentity/proof.py using Schnorr signatures with Fiat-Shamir (FR-005, FR-007)
+- [X] T043 [US2] Implement verify_proof function in zkidentity/proof.py to validate proofs against public keys and challenges (FR-006, FR-013, FR-014)
+- [X] T044 [US2] Add proof format validation in zkidentity/proof.py before acceptance (FR-013)
+- [X] T045 [US2] Add error handling for invalid/malformed proofs in zkidentity/proof.py (FR-014)
+- [X] T046 [US2] Ensure proofs for different aliases are cryptographically unlinkable in zkidentity/proof.py (FR-007)
+- [X] T047 [US2] Add check to prevent proof generation for revoked aliases in zkidentity/proof.py
+- [X] T048 [US2] Create CLI command for proof generation in cli/commands/proof.py
+- [X] T049 [US2] Create CLI command for proof verification in cli/commands/proof.py
+- [X] T050 [US2] Add challenge message validation (non-empty, reasonable size) in zkidentity/proof.py
+- [X] T051 [US2] Ensure private keys are never exposed during proof generation (FR-011)
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently. Users can create aliases and generate/verify zero-knowledge proofs.
 
