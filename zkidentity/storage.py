@@ -10,7 +10,7 @@ from pathlib import Path
 from typing import Dict, List, Optional
 from datetime import datetime
 
-from zkidentity.exceptions import AliasError
+from zkidentity.exceptions import AliasError, CredentialError
 
 
 class AliasStorage:
@@ -36,26 +36,30 @@ class AliasStorage:
         
         self.storage_path = Path(storage_path)
         self._aliases: Dict[str, Dict] = {}
+        self._credentials: Dict[str, Dict] = {}
         self._load()
     
     def _load(self) -> None:
-        """Load aliases from storage file."""
+        """Load aliases and credentials from storage file."""
         if self.storage_path.exists():
             try:
                 with open(self.storage_path, 'r') as f:
                     data = json.load(f)
                     self._aliases = data.get('aliases', {})
+                    self._credentials = data.get('credentials', {})
             except (json.JSONDecodeError, IOError) as e:
                 raise AliasError(f"Failed to load storage: {e}")
         else:
             self._aliases = {}
+            self._credentials = {}
     
     def _save(self) -> None:
-        """Save aliases to storage file."""
+        """Save aliases and credentials to storage file."""
         try:
             data = {
                 'version': '1.0',
-                'aliases': self._aliases
+                'aliases': self._aliases,
+                'credentials': self._credentials
             }
             with open(self.storage_path, 'w') as f:
                 json.dump(data, f, indent=2)
@@ -133,6 +137,72 @@ class AliasStorage:
         """
         if alias_id in self._aliases:
             del self._aliases[alias_id]
+            self._save()
+    
+    def save_credential(self, credential_id: str, alias_public_key: str,
+                       credential_json: dict, created_at: Optional[str] = None,
+                       expires_at: Optional[str] = None) -> None:
+        """
+        Save credential metadata to storage.
+        
+        Args:
+            credential_id: Credential identifier
+            alias_public_key: Alias public key (hex) this credential is associated with
+            credential_json: Full W3C VC JSON structure
+            created_at: Creation timestamp (ISO format)
+            expires_at: Expiration timestamp (ISO format) if applicable
+        """
+        if created_at is None:
+            created_at = datetime.now().isoformat()
+        
+        self._credentials[credential_id] = {
+            'credential_id': credential_id,
+            'alias_public_key': alias_public_key,
+            'credential_json': credential_json,
+            'created_at': created_at,
+            'expires_at': expires_at
+        }
+        self._save()
+    
+    def load_credential(self, credential_id: str) -> Optional[Dict]:
+        """
+        Load credential metadata by ID.
+        
+        Args:
+            credential_id: Credential identifier
+        
+        Returns:
+            Credential metadata dict or None if not found
+        """
+        return self._credentials.get(credential_id)
+    
+    def list_credentials(self, alias_public_key: Optional[str] = None) -> List[Dict]:
+        """
+        List all credentials, optionally filtered by alias public key.
+        
+        Args:
+            alias_public_key: Optional filter by alias public key (hex)
+        
+        Returns:
+            List of credential metadata dicts
+        """
+        if alias_public_key is None:
+            return list(self._credentials.values())
+        
+        return [
+            cred for cred in self._credentials.values()
+            if cred.get('alias_public_key') == alias_public_key
+        ]
+    
+    def delete_credential(self, credential_id: str) -> None:
+        """
+        Delete credential from storage.
+        
+        Args:
+            credential_id: Credential identifier
+        """
+        if credential_id in self._credentials:
+            del self._credentials[credential_id]
             self._save()
 
 

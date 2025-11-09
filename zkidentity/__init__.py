@@ -48,6 +48,15 @@ from zkidentity.proof import (
     generate_service_challenge,
 )
 
+# Credential functions
+from zkidentity.credential import (
+    create_credential,
+    present_credential,
+    VerifiableCredential,
+    CredentialPresentation,
+    ensure_presentation_unlinkability,
+)
+
 __all__ = [
     # Exceptions
     "ZKIdentityError",
@@ -77,5 +86,11 @@ __all__ = [
     "authenticate",
     "create_authentication_request",
     "prepare_authentication_response",
+    # Credential functions
+    "create_credential",
+    "present_credential",
+    "VerifiableCredential",
+    "CredentialPresentation",
+    "ensure_presentation_unlinkability",
 ]
 

@@ -12,7 +12,7 @@ if str(project_root.resolve()) not in [str(Path(p).resolve()) for p in sys.path]
     sys.path.insert(0, str(project_root.resolve()))
 
 import click
-from cli.commands import alias, seed, proof
+from cli.commands import alias, seed, proof, credential
 
 
 @click.group()
@@ -26,6 +26,7 @@ def main():
 main.add_command(alias.alias_group)
 main.add_command(seed.seed_group)
 main.add_command(proof.proof_group)
+main.add_command(credential.credential_group)
 
 
 if __name__ == '__main__':

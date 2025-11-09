@@ -141,17 +141,17 @@
 
 ### Implementation for User Story 4
 
-- [ ] T059 [P] [US4] Create VerifiableCredential dataclass in zkidentity/credential.py with credential_id, credential_subject, issuer, alias_public_key, credential_json, created_at, expires_at attributes
-- [ ] T060 [P] [US4] Create CredentialPresentation dataclass in zkidentity/credential.py with credential, proof, presented_at attributes
-- [ ] T061 [US4] Implement W3C VC JSON-LD processing using pyld library in zkidentity/credential.py
-- [ ] T062 [US4] Implement create_credential function in zkidentity/credential.py following W3C Verifiable Credentials Data Model v1.1+ (FR-009)
-- [ ] T063 [US4] Implement present_credential function in zkidentity/credential.py that combines credential with zero-knowledge proof (FR-009, FR-010)
-- [ ] T064 [US4] Ensure credential presentations are unlinkable across different aliases in zkidentity/credential.py (FR-010)
-- [ ] T065 [US4] Add credential validation (W3C VC structure validation) in zkidentity/credential.py
-- [ ] T066 [US4] Create CLI command for credential creation in cli/commands/credential.py
-- [ ] T067 [US4] Create CLI command for credential presentation in cli/commands/credential.py
-- [ ] T068 [US4] Add storage integration for credentials in zkidentity/storage.py
-- [ ] T069 [US4] Ensure credential presentations cannot be linked to other aliases (FR-010)
+- [X] T059 [P] [US4] Create VerifiableCredential dataclass in zkidentity/credential.py with credential_id, credential_subject, issuer, alias_public_key, credential_json, created_at, expires_at attributes
+- [X] T060 [P] [US4] Create CredentialPresentation dataclass in zkidentity/credential.py with credential, proof, presented_at attributes
+- [X] T061 [US4] Implement W3C VC JSON-LD processing using pyld library in zkidentity/credential.py
+- [X] T062 [US4] Implement create_credential function in zkidentity/credential.py following W3C Verifiable Credentials Data Model v1.1+ (FR-009)
+- [X] T063 [US4] Implement present_credential function in zkidentity/credential.py that combines credential with zero-knowledge proof (FR-009, FR-010)
+- [X] T064 [US4] Ensure credential presentations are unlinkable across different aliases in zkidentity/credential.py (FR-010)
+- [X] T065 [US4] Add credential validation (W3C VC structure validation) in zkidentity/credential.py
+- [X] T066 [US4] Create CLI command for credential creation in cli/commands/credential.py
+- [X] T067 [US4] Create CLI command for credential presentation in cli/commands/credential.py
+- [X] T068 [US4] Add storage integration for credentials in zkidentity/storage.py
+- [X] T069 [US4] Ensure credential presentations cannot be linked to other aliases (FR-010)
 
 **Checkpoint**: All user stories should now be independently functional. Users can create aliases, generate proofs, authenticate, and present verifiable credentials.
 
